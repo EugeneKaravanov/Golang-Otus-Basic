@@ -1,0 +1,12 @@
+# GoLand / IntelliJ IDEA
+.idea/
+*.iml
+
+# Go build
+*.exe
+*.test
+*.out
+
+# OS
+.DS_Store
+Thumbs.db
