@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -15,36 +16,48 @@ func main() {
 
 	var inputHeight int
 	var inputWidth int
-	var chessboard string
+	var chessBoardBuilder strings.Builder
+	var chessBoard string
 
 	fmt.Printf("Введите ширину шахматного поля от %d до %d\n", minWidth, maxWidth)
-	fmt.Fscan(os.Stdin, &inputWidth)
+	_, err := fmt.Fscan(os.Stdin, &inputWidth)
+
+	if err != nil {
+		fmt.Println("ОШИБКА: Не удается преобразовать введенную ширину в число")
+		os.Exit(1)
+	}
 
 	if inputWidth < minWidth || inputWidth > maxWidth {
 		fmt.Println("ОШИБКА: Введенная ширина не соответствует ограничениям")
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	fmt.Printf("Введите высоту шахматного поля от %d до %d\n", minHeight, maxHeight)
-	fmt.Fscan(os.Stdin, &inputHeight)
+	_, err = fmt.Fscan(os.Stdin, &inputHeight)
+
+	if err != nil {
+		fmt.Println("ОШИБКА: Не удается преобразовать введенную высоту в число")
+		os.Exit(1)
+	}
 
 	if inputHeight < minHeight || inputHeight > maxHeight {
 		fmt.Println("ОШИБКА: Введенная высота не соответствует ограничениям")
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	for i := 1; i <= inputHeight; i++ {
 		for j := 1; j <= inputWidth; j++ {
-			if (i%2 != 0 && j%2 == 0) || (i%2 == 0 && j%2 != 0) {
-				chessboard += string(blackCell)
+			if (i+j)%2 != 0 {
+				chessBoardBuilder.WriteRune(blackCell)
 			} else {
-				chessboard += string(whiteCell)
+				chessBoardBuilder.WriteRune(whiteCell)
 			}
 		}
 
-		chessboard += string("\n")
+		chessBoardBuilder.WriteRune('\n')
 	}
 
+	chessBoard = chessBoardBuilder.String()
 	fmt.Println("Сгенерированное шахматное поле:")
-	fmt.Println(chessboard)
+	fmt.Println(chessBoard)
 }
