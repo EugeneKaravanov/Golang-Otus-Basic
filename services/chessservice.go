@@ -5,38 +5,45 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func GenerateChessBoard() (string, error) {
 	var chessBoard string
-	width, height, firstName, lastName, err := handleInputParameters()
+	var chessBoardBuilder strings.Builder
+
+	width, height, firstName, secondName, err := handleInputParameters()
 
 	if err != nil {
-		fmt.Println("При обработке входящих параметров произошла ошибка")
-
 		return "", err
 	}
 
 	err = validateInputParameters(width, height)
 
 	if err != nil {
-		fmt.Println("Валидация входных параметров прошла неуспешна по причине: ", err.Error())
-
 		return "", err
 	}
 
 	for i := 1; i <= height; i++ {
+		chessBoardBuilder.WriteString(fmt.Sprintf("%d ", i))
+
 		for j := 1; j <= width; j++ {
 			color := getCellColor(i, j)
 			chessPiece := getChessPieceByLineColumnAndHeight(i, j, height)
-			chessBoard += color + chessPiece + constants.AnsiResetColorCommand
+			chessBoardBuilder.WriteString(color + chessPiece + constants.AnsiResetColorCommand)
 		}
 
-		chessBoard += string("\n")
+		err = tryAddPlayerNamesByLineAndHeight(i, height, &chessBoardBuilder, firstName, secondName)
+
+		if err != nil {
+			return "", err
+		}
+
+		chessBoardBuilder.WriteString("\n")
 	}
 
-	chessBoard += firstName
-	chessBoard += lastName
+	chessBoardBuilder.WriteString(" " + constants.Alphabet[:width])
+	chessBoard = chessBoardBuilder.String()
 
 	return chessBoard, nil
 }
@@ -46,28 +53,28 @@ func handleInputParameters() (width, height int, firstName, lastName string, err
 	_, err = fmt.Fscan(os.Stdin, &width)
 
 	if err != nil {
-		return 0, 0, "", "", err
+		return 0, 0, "", "", errors.New("не удалось обработать входящую ширину шахматаной доски")
 	}
 
 	fmt.Printf("Введите высоту шахматного поля от %d до %d\n", constants.MinHeight, constants.MaxHeight)
 	_, err = fmt.Fscan(os.Stdin, &height)
 
 	if err != nil {
-		return 0, 0, "", "", err
+		return 0, 0, "", "", errors.New("не удалось обработать входящую высоту шахматаной доски")
 	}
 
-	fmt.Printf("Введите имя первого игрока")
+	fmt.Printf("Введите имя первого игрока\n")
 	_, err = fmt.Fscan(os.Stdin, &firstName)
 
 	if err != nil {
-		return 0, 0, "", "", err
+		return 0, 0, "", "", errors.New("не удалось обработать имя первого игрока")
 	}
 
-	fmt.Printf("Введите имя первого игрока")
+	fmt.Printf("Введите имя первого игрока\n")
 	_, err = fmt.Fscan(os.Stdin, &lastName)
 
 	if err != nil {
-		return 0, 0, "", "", err
+		return 0, 0, "", "", errors.New("не удалось обработать имя второго игрока")
 	}
 
 	return width, height, firstName, lastName, nil
@@ -89,7 +96,7 @@ func getChessPieceByLineColumnAndHeight(line, column, height int) string {
 	columnIndex := column % constants.BaseWidth
 
 	if line > 2 && line < height-1 {
-		return "⛶"
+		return constants.Empty
 	}
 
 	if line == 2 {
@@ -137,9 +144,29 @@ func getChessPieceByLineColumnAndHeight(line, column, height int) string {
 }
 
 func getCellColor(line, column int) (color string) {
-	if (line%2 != 0 && column%2 == 0) || (line%2 == 0 && column%2 != 0) {
+	if (line+column)%2 != 0 {
 		return constants.AnsiBlackColorCommand
 	}
 
 	return constants.AnsiWhiteColorCommand
+}
+
+func tryAddPlayerNamesByLineAndHeight(line, height int, chessBoardBuilder *strings.Builder, firstName, secondName string) error {
+	if &chessBoardBuilder == nil {
+		return errors.New("не удалось получить string Builder при добавлении имени игрока")
+	}
+
+	if line == 1 {
+		chessBoardBuilder.WriteString(constants.Indentation + "Игрок 1: " + firstName)
+
+		return nil
+	}
+
+	if line == height {
+		chessBoardBuilder.WriteString(constants.Indentation + "Игрок 2: " + secondName)
+
+		return nil
+	}
+
+	return nil
 }

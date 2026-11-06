@@ -21,9 +21,13 @@ const (
 	BlackKnight = "♞"
 	BlackPawn   = "♟"
 
-	Empty = " "
+	Empty = "⛶"
 
 	AnsiWhiteColorCommand = "\033[47m"
 	AnsiBlackColorCommand = "\033[40m"
 	AnsiResetColorCommand = "\033[0m"
+
+	Indentation = "   "
+
+	Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 )

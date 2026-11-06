@@ -11,7 +11,7 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	fmt.Println("Сгенерированное шахматное поле:")
