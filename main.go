@@ -1,13 +1,13 @@
 package main
 
 import (
-	"Golang-Otus-Basic/services"
+	"Golang-Otus-Basic/internal/services/chess"
 	"fmt"
 	"os"
 )
 
 func main() {
-	chessboard, err := services.GenerateChessBoard()
+	chessboard, err := chess.GenerateChessBoard()
 
 	if err != nil {
 		fmt.Println(err)
