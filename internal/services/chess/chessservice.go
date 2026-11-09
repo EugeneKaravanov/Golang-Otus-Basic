@@ -1,7 +1,7 @@
-package services
+package chess
 
 import (
-	"Golang-Otus-Basic/constants"
+	"Golang-Otus-Basic/internal/constants/chess"
 	"errors"
 	"fmt"
 	"os"
@@ -30,7 +30,7 @@ func GenerateChessBoard() (string, error) {
 		for j := 1; j <= width; j++ {
 			color := getCellColor(i, j)
 			chessPiece := getChessPieceByLineColumnAndHeight(i, j, height)
-			chessBoardBuilder.WriteString(color + chessPiece + constants.AnsiResetColorCommand)
+			chessBoardBuilder.WriteString(color + chessPiece + chess.AnsiResetColorCommand)
 		}
 
 		err = tryAddPlayerNamesByLineAndHeight(i, height, &chessBoardBuilder, firstName, secondName)
@@ -42,21 +42,21 @@ func GenerateChessBoard() (string, error) {
 		chessBoardBuilder.WriteString("\n")
 	}
 
-	chessBoardBuilder.WriteString(" " + constants.Alphabet[:width])
+	chessBoardBuilder.WriteString(" " + chess.Alphabet[:width])
 	chessBoard = chessBoardBuilder.String()
 
 	return chessBoard, nil
 }
 
 func handleInputParameters() (width, height int, firstName, lastName string, err error) {
-	fmt.Printf("Введите ширину шахматного поля от %d до %d\n", constants.MinWidth, constants.MaxWidth)
+	fmt.Printf("Введите ширину шахматного поля от %d до %d\n", chess.MinWidth, chess.MaxWidth)
 	_, err = fmt.Fscan(os.Stdin, &width)
 
 	if err != nil {
 		return 0, 0, "", "", errors.New("не удалось обработать входящую ширину шахматаной доски")
 	}
 
-	fmt.Printf("Введите высоту шахматного поля от %d до %d\n", constants.MinHeight, constants.MaxHeight)
+	fmt.Printf("Введите высоту шахматного поля от %d до %d\n", chess.MinHeight, chess.MaxHeight)
 	_, err = fmt.Fscan(os.Stdin, &height)
 
 	if err != nil {
@@ -81,11 +81,11 @@ func handleInputParameters() (width, height int, firstName, lastName string, err
 }
 
 func validateInputParameters(width, height int) error {
-	if width < constants.MinWidth || width > constants.MaxWidth {
+	if width < chess.MinWidth || width > chess.MaxWidth {
 		return errors.New("ширина шахматного поля находится за пределами допустимых значений")
 	}
 
-	if height < constants.MinHeight || height > constants.MaxHeight {
+	if height < chess.MinHeight || height > chess.MaxHeight {
 		return errors.New("высота шахматного поля находится за пределами допустимых значений")
 	}
 
@@ -93,62 +93,62 @@ func validateInputParameters(width, height int) error {
 }
 
 func getChessPieceByLineColumnAndHeight(line, column, height int) string {
-	columnIndex := column % constants.BaseWidth
+	columnIndex := column % chess.BaseWidth
 
 	if line > 2 && line < height-1 {
-		return constants.Empty
+		return chess.Empty
 	}
 
 	if line == 2 {
-		return constants.BlackPawn
+		return chess.BlackPawn
 	}
 
 	if line == height-1 {
-		return constants.WhitePawn
+		return chess.WhitePawn
 	}
 
 	switch columnIndex {
 	case 1, 0:
 		if line == 1 {
-			return constants.BlackRook
+			return chess.BlackRook
 		}
 
-		return constants.WhiteRook
+		return chess.WhiteRook
 	case 2, 7:
 		if line == 1 {
-			return constants.BlackKnight
+			return chess.BlackKnight
 		}
 
-		return constants.WhiteKnight
+		return chess.WhiteKnight
 	case 3, 6:
 		if line == 1 {
-			return constants.BlackBishop
+			return chess.BlackBishop
 		}
 
-		return constants.WhiteBishop
+		return chess.WhiteBishop
 	case 4:
 		if line == 1 {
-			return constants.BlackQueen
+			return chess.BlackQueen
 		}
 
-		return constants.WhiteQueen
+		return chess.WhiteQueen
 	case 5:
 		if line == 1 {
-			return constants.BlackKing
+			return chess.BlackKing
 		}
 
-		return constants.WhiteKing
+		return chess.WhiteKing
 	}
 
-	return constants.Empty
+	return chess.Empty
 }
 
 func getCellColor(line, column int) (color string) {
 	if (line+column)%2 != 0 {
-		return constants.AnsiBlackColorCommand
+		return chess.AnsiBlackColorCommand
 	}
 
-	return constants.AnsiWhiteColorCommand
+	return chess.AnsiWhiteColorCommand
 }
 
 func tryAddPlayerNamesByLineAndHeight(line, height int, chessBoardBuilder *strings.Builder, firstName, secondName string) error {
@@ -157,13 +157,13 @@ func tryAddPlayerNamesByLineAndHeight(line, height int, chessBoardBuilder *strin
 	}
 
 	if line == 1 {
-		chessBoardBuilder.WriteString(constants.Indentation + "Игрок 1: " + firstName)
+		chessBoardBuilder.WriteString(chess.Indentation + "Игрок 1: " + firstName)
 
 		return nil
 	}
 
 	if line == height {
-		chessBoardBuilder.WriteString(constants.Indentation + "Игрок 2: " + secondName)
+		chessBoardBuilder.WriteString(chess.Indentation + "Игрок 2: " + secondName)
 
 		return nil
 	}

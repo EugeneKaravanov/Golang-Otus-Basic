@@ -1,4 +1,4 @@
-package constants
+package chess
 
 const (
 	MinHeight = 4 //ограничение, чтобы уместить все ряды шахмат
