@@ -3,17 +3,14 @@ package main
 import (
 	"Golang-Otus-Basic/internal/services/chess"
 	"fmt"
-	"os"
 )
 
 func main() {
-	chessboard, err := chess.GenerateChessBoard()
+	chessService := chess.NewChessService()
+	go chessService.StartGenerateAndSaveModels()
+	err := chess.PlayChess()
 
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
 	}
-
-	fmt.Println("Сгенерированное шахматное поле:")
-	fmt.Println(chessboard)
 }
