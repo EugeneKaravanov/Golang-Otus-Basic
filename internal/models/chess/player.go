@@ -10,6 +10,12 @@ func NewPlayer(name string) Player {
 	}
 }
 
+func (player *Player) GetName() string {
+	return player.name
+}
+
 func (player *Player) GetInfo() Player {
 	return *player
 }
+
+func (player Player) Save() {}

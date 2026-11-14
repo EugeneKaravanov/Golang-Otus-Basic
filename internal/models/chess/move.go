@@ -19,3 +19,5 @@ func NewMove(initiator Player, oldPosition, newPosition, chessPiece string) Move
 func (move *Move) GetInfo() Move {
 	return *move
 }
+
+func (move Move) Save() {}

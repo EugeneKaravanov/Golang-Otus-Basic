@@ -24,7 +24,7 @@ func (game *Game) GetInfo() Game {
 	return *game
 }
 
-func (game *Game) UpdateBoard(boardState string) {
+func (game *Game) UpdateBoard(boardState [][]string) {
 	game.board.UpdateBoard(boardState)
 }
 
@@ -36,3 +36,5 @@ func (game *Game) SetWinner(player *Player) {
 	game.winner = player
 	game.isActive = false
 }
+
+func (game Game) Save() {}

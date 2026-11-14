@@ -30,4 +30,8 @@ const (
 	Indentation = "   "
 
 	Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+	MinGenerationPause  = 1
+	MaxGenerationPause  = 5
+	GeneratedModelTypes = 4
 )
